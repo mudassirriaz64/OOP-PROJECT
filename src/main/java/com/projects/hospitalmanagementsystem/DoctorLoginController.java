@@ -135,14 +135,15 @@ public class DoctorLoginController implements Initializable {
                         Data.doctor_name = result.getString("full_name");
 
                         alert.successMessage("Login Successfully!");
+                        ClearLoginFields();
 
                         // LINK YOUR DOCTOR MAIN FORM
-                        Parent root = FXMLLoader.load(getClass().getResource("DoctorMainForm.fxml"));
-                        Stage stage = new Stage();
-
-                        stage.setTitle("Hospital Management System | Doctor Main Form");
-                        stage.setScene(new Scene(root));
-                        stage.show();
+//                       // Parent root = FXMLLoader.load(getClass().getResource("DoctorDashboard.fxml"));
+//                        Stage stage = new Stage();
+//
+//                        stage.setTitle("Hospital Management System | Doctor Main Form");
+//                        stage.setScene(new Scene(root));
+//                        stage.show();
 
                         // TO HIDE YOUR DOCTOR PAGE
                         login_loginBtn.getScene().getWindow().hide();
@@ -224,6 +225,7 @@ public class DoctorLoginController implements Initializable {
                     prepare.executeUpdate();
 
                     alert.successMessage("Registered Succesfully!");
+                    ClearRegisterFields();
 
                 }
 
@@ -234,6 +236,21 @@ public class DoctorLoginController implements Initializable {
         }
 
     }
+
+    void ClearRegisterFields()
+    {
+        register_fullName.clear();
+        register_email.clear();
+        register_doctorID.clear();
+        register_password.clear();
+    }
+
+    void ClearLoginFields()
+    {
+        login_doctorID.clear();
+        login_password.clear();
+    }
+
 
     @FXML
     void registerShowPassword() {
@@ -334,7 +351,8 @@ public class DoctorLoginController implements Initializable {
                 e.printStackTrace();
             }
 
-        } else if (login_user.getSelectionModel().getSelectedItem() == "Patient Portal") {
+        } else if (login_user.getSelectionModel().getSelectedItem() == "Patient Portal")
+        {
 
             try {
 

@@ -34,7 +34,7 @@ public class Data {
     public static String temp_doctorName;
     public static String temp_doctorEmail;
     public static String temp_doctorPassword;
-    public static String temp_doctorSpecialized;
+    public static String temp_doctorSpecialization;
     public static String temp_doctorGender;
     public static String temp_doctorMobileNumber;
     public static String temp_doctorImagePath;
@@ -50,7 +50,7 @@ public class Data {
     public static String temp_appDiagnosis;
     public static String temp_appTreatment;
     public static String temp_appDoctor;
-    public static String temp_appSpecialized;
+    public static String temp_appSpecialization;
     public static String temp_appStatus;
 
 }

@@ -127,7 +127,7 @@ public class AdminLoginController implements Initializable {
                     alert.successMessage("Login Successfully!");
 
                     // LINK MAIN FORM FOR ADMIN
-                    Parent root = FXMLLoader.load(getClass().getResource("AdminMainForm.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("AdminDashboard.fxml"));
                     Stage stage = new Stage();
 
                     stage.setTitle("Hospital Management System | Admin Portal");
