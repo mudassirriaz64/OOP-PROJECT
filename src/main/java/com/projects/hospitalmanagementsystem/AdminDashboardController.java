@@ -457,7 +457,7 @@ public class AdminDashboardController implements Initializable {
     public void dashboardPatientDataChart() {
         dashboad_chart_PD.getData().clear();
 
-        String selectData = "SELECT date, COUNT(id) FROM patient WHERE date_delete IS NULL GROUP BY TIMESTAMP(datE) ASC LIMIT 8";
+        String selectData = "SELECT date, COUNT(id) FROM patient WHERE date_delete IS NULL GROUP BY date LIMIT 8";
 
         connect = DatabaseConnection.connectDB();
         XYChart.Series chart = new XYChart.Series<>();
@@ -481,7 +481,7 @@ public class AdminDashboardController implements Initializable {
     public void dashboardDoctorDataChart() {
         dashboad_chart_DD.getData().clear();
 
-        String selectData = "SELECT date, COUNT(id) FROM doctor WHERE delete_date IS NULL GROUP BY TIMESTAMP(date) ASC LIMIT 6";
+        String selectData = "SELECT date, COUNT(id) FROM patient WHERE date_delete IS NULL GROUP BY date LIMIT 8";
 
         connect = DatabaseConnection.connectDB();
         XYChart.Series chart = new XYChart.Series<>();
@@ -514,9 +514,6 @@ public class AdminDashboardController implements Initializable {
             result = prepare.executeQuery();
             DoctorData dData;
             while (result.next()) {
-//                DoctorData(Integer id, String doctorID, String password, String fullName,
-//            String email, String gender, Long mobileNumber, String specialized, String address,
-//            String image, Date date, Date dateModify, Date dateDelete, String status)
                 dData = new DoctorData(result.getInt("id"), result.getString("doctor_id"),
                         result.getString("password"), result.getString("full_name"),
                         result.getString("email"), result.getString("gender"),
@@ -676,10 +673,6 @@ public class AdminDashboardController implements Initializable {
             PatientData pData;
 
             while (result.next()) {
-//                PatientsData(Integer id, Integer patientID, String password, String fullName, Long mobileNumber
-//            , String address, String image, String description, String diagnosis, String treatment
-//            , String doctor, String specialized, Date date, Date dateModify
-//            , Date dateDelete, String status)
                 pData = new PatientData(result.getInt("id"), result.getInt("patient_id"),
                         result.getString("password"), result.getString("full_name"),
                         result.getLong("mobile_number"), result.getString("gender"),
@@ -845,7 +838,7 @@ public class AdminDashboardController implements Initializable {
                         result.getString("name"), result.getString("gender"), result.getLong("mobile_number"),
                         result.getString("description"), result.getString("diagnosis"),
                         result.getString("treatment"), result.getString("address"),
-                        result.getString("doctor"), result.getString("specialized"),
+                        result.getString("doctor"), result.getString("specialization" ),
                         result.getDate("date"), result.getDate("date_modify"),
                         result.getDate("date_delete"), result.getString("status"),
                         result.getDate("schedule"));
@@ -1328,13 +1321,11 @@ public class AdminDashboardController implements Initializable {
 
         try {
             if (alert.confirmationMessage("Are you sure you want to logout?")) {
-                Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("AdminLoginPage.fxml"));
                 Stage stage = new Stage();
 
                 stage.setScene(new Scene(root));
                 stage.show();
-
-                // TO HIDE YOUR MAIN FORM
                 logout_btn.getScene().getWindow().hide();
             }
         } catch (Exception e) {

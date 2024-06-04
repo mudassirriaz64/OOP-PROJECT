@@ -92,7 +92,7 @@ public class PatientLoginController implements Initializable {
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (result.next()) {
+                if (!result.next()) {
 
                     if (!login_showPassword.isVisible()) {
                         if (!login_showPassword.getText().equals(login_password.getText())) {

@@ -1,3 +1,4 @@
+
 package com.projects.hospitalmanagementsystem;
 
 import java.net.URL;
@@ -8,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -27,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 /**
+ *
  * @author WINDOWS 10
  */
 public class DoctorLoginController implements Initializable {
@@ -93,9 +94,11 @@ public class DoctorLoginController implements Initializable {
     private final AlertMessage alert = new AlertMessage();
 
     @FXML
-    void loginAccount() {
+    void loginAccount()
+    {
 
-        if (login_doctorID.getText().isEmpty() || login_password.getText().isEmpty()) {
+        if (login_doctorID.getText().isEmpty()
+                || login_password.getText().isEmpty()) {
             alert.errorMessage("Incorrect Doctor ID/Password");
         } else {
 
@@ -115,12 +118,15 @@ public class DoctorLoginController implements Initializable {
                 }
 
                 // CHECK IF THE STATUS OF THE DOCTOR IS CONFIRM
-                String checkStatus = "SELECT status FROM doctor WHERE doctor_id = '" + login_doctorID.getText() + "' AND password = '" + login_password.getText() + "' AND status = 'Confirm'";
+                String checkStatus = "SELECT status FROM doctor WHERE doctor_id = '"
+                        + login_doctorID.getText() + "' AND password = '"
+                        + login_password.getText() + "' AND status = 'Confirm'";
 
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (result.next()) {
+                if (!result.next()) {
+
                     alert.errorMessage("Need the confirmation of the Admin!");
                 } else {
                     prepare = connect.prepareStatement(sql);
@@ -135,15 +141,14 @@ public class DoctorLoginController implements Initializable {
                         Data.doctor_name = result.getString("full_name");
 
                         alert.successMessage("Login Successfully!");
-                        ClearLoginFields();
 
                         // LINK YOUR DOCTOR MAIN FORM
-//                       // Parent root = FXMLLoader.load(getClass().getResource("DoctorDashboard.fxml"));
-//                        Stage stage = new Stage();
-//
-//                        stage.setTitle("Hospital Management System | Doctor Main Form");
-//                        stage.setScene(new Scene(root));
-//                        stage.show();
+                        Parent root = FXMLLoader.load(getClass().getResource("DoctorDashboard.fxml"));
+                        Stage stage = new Stage();
+
+                        stage.setTitle("Hospital Management System | Doctor Main Form");
+                        stage.setScene(new Scene(root));
+                        stage.show();
 
                         // TO HIDE YOUR DOCTOR PAGE
                         login_loginBtn.getScene().getWindow().hide();
@@ -179,11 +184,15 @@ public class DoctorLoginController implements Initializable {
     @FXML
     void registerAccount() {
 
-        if (register_fullName.getText().isEmpty() || register_email.getText().isEmpty() || register_doctorID.getText().isEmpty() || register_password.getText().isEmpty()) {
+        if (register_fullName.getText().isEmpty()
+                || register_email.getText().isEmpty()
+                || register_doctorID.getText().isEmpty()
+                || register_password.getText().isEmpty()) {
             alert.errorMessage("Please fill all blank fields");
         } else {
 
-            String checkDoctorID = "SELECT * FROM doctor WHERE doctor_id = '" + register_doctorID.getText() + "'"; // LETS CREATE OUR TABLE FOR DOCTOR FIRST
+            String checkDoctorID = "SELECT * FROM doctor WHERE doctor_id = '"
+                    + register_doctorID.getText() + "'"; // LETS CREATE OUR TABLE FOR DOCTOR FIRST
 
             connect = DatabaseConnection.connectDB();
 
@@ -208,7 +217,8 @@ public class DoctorLoginController implements Initializable {
                     alert.errorMessage("Invalid password, at least 8 characters needed");
                 } else {
 
-                    String insertData = "INSERT INTO doctor (full_name, email, doctor_id, password, date, status) " + "VALUES(?,?,?,?,?,?)";
+                    String insertData = "INSERT INTO doctor (full_name, email, doctor_id, password, date, status) "
+                            + "VALUES(?,?,?,?,?,?)";
 
                     prepare = connect.prepareStatement(insertData);
 
@@ -225,7 +235,9 @@ public class DoctorLoginController implements Initializable {
                     prepare.executeUpdate();
 
                     alert.successMessage("Registered Succesfully!");
-                    ClearRegisterFields();
+
+                    login_form.setVisible(true);
+                    register_form.setVisible(false);
 
                 }
 
@@ -236,21 +248,6 @@ public class DoctorLoginController implements Initializable {
         }
 
     }
-
-    void ClearRegisterFields()
-    {
-        register_fullName.clear();
-        register_email.clear();
-        register_doctorID.clear();
-        register_password.clear();
-    }
-
-    void ClearLoginFields()
-    {
-        login_doctorID.clear();
-        login_password.clear();
-    }
-
 
     @FXML
     void registerShowPassword() {
@@ -268,36 +265,38 @@ public class DoctorLoginController implements Initializable {
     }
 
     public void registerDoctorID() {
-        String doctorID = "DID-";
-        int tempID = 0;
-        String sql = "SELECT MAX(id) FROM doctor";
+        if (register_doctorID.getText().isEmpty()) { // Check if the TextField is empty
+            String doctorID = "DID-";
+            int tempID = 0;
+            String sql = "SELECT MAX(id) FROM doctor";
 
-        connect = DatabaseConnection.connectDB();
+            connect = DatabaseConnection.connectDB();
 
-        try {
+            try {
 
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
+                prepare = connect.prepareStatement(sql);
+                result = prepare.executeQuery();
 
-            if (result.next()) {
-                tempID = result.getInt("MAX(id)");
+                if (result.next()) {
+                    tempID = result.getInt("MAX(id)");
+                }
+
+                if (tempID == 0) {
+                    tempID += 1;
+                    doctorID += tempID;
+                } else {
+                    doctorID += (tempID + 1);
+                }
+
+                register_doctorID.setText(doctorID);
+                register_doctorID.setDisable(true);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            if (tempID == 0) {
-                tempID += 1;
-                doctorID += tempID;
-            } else {
-                doctorID += (tempID + 1);
-            }
-
-            register_doctorID.setText(doctorID);
-            register_doctorID.setDisable(true);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
     }
+
 
     public void userList() {
 
@@ -351,12 +350,11 @@ public class DoctorLoginController implements Initializable {
                 e.printStackTrace();
             }
 
-        } else if (login_user.getSelectionModel().getSelectedItem() == "Patient Portal")
-        {
+        } else if (login_user.getSelectionModel().getSelectedItem() == "Patient Portal") {
 
             try {
 
-                Parent root = FXMLLoader.load(getClass().getResource("PatientPage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("PatientLoginPage.fxml"));
                 Stage stage = new Stage();
 
                 stage.setTitle("Hospital Management System");
