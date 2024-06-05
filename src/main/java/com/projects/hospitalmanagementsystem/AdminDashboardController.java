@@ -346,6 +346,7 @@ public class AdminDashboardController implements Initializable {
     public void dashboardTP() {
 
         String sql = "SELECT COUNT(id) FROM patient WHERE date_delete IS NULL";
+        String sql = "SELECT COUNT(id) FROM patient ";
 
         connect = DatabaseConnection.connectDB();
 
@@ -413,9 +414,12 @@ public class AdminDashboardController implements Initializable {
     }
 
     public ObservableList<Doctor> dashboardGetDoctorData() {
+    public ObservableList<Doctor> dashboardGetDoctorData()
+    {
 
         ObservableList<Doctor> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM doctor WHERE delete_date IS NULL";
+        String sql = "SELECT * FROM doctor WHERE status ='Active' and delete_date IS NULL";
 
         connect = DatabaseConnection.connectDB();
 
@@ -427,6 +431,8 @@ public class AdminDashboardController implements Initializable {
             Doctor dData;
 
             while (result.next()) {
+            while (result.next())
+            {
                 dData = new Doctor(result.getString("doctor_id"),
                         result.getString("full_name"), result.getString("specialization"),
                         result.getString("status"));
@@ -443,6 +449,8 @@ public class AdminDashboardController implements Initializable {
     public ObservableList<Doctor> dashboardGetDoctorListData;
 
     public void dashboardGetDoctorDisplayData() {
+    public void dashboardGetDoctorDisplayData()
+    {
         dashboardGetDoctorListData = dashboardGetDoctorData();
 
         dashboad_col_doctorID.setCellValueFactory(new PropertyValueFactory<>("doctorID"));
@@ -503,6 +511,8 @@ public class AdminDashboardController implements Initializable {
     }
 
     public ObservableList<Doctor> doctorGetData() {
+    public ObservableList<Doctor> doctorGetData()
+    {
         ObservableList<Doctor> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM doctor";
@@ -533,6 +543,8 @@ public class AdminDashboardController implements Initializable {
     private ObservableList<Doctor> doctorListData;
 
     public void doctorDisplayData() {
+    public void doctorDisplayData()
+    {
         doctorListData = doctorGetData();
 
         doctors_col_doctorID.setCellValueFactory(new PropertyValueFactory<>("doctorID"));
@@ -601,6 +613,7 @@ public class AdminDashboardController implements Initializable {
 
                                 // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
                                 Parent root = FXMLLoader.load(getClass().getResource("EditDoctorForm.fxml"));
+                                Parent root = FXMLLoader.load(getClass().getResource("EditDoctor.fxml"));
                                 Stage stage = new Stage();
 
                                 stage.setScene(new Scene(root));
@@ -621,6 +634,7 @@ public class AdminDashboardController implements Initializable {
                             }
 
                             String deleteData = "UPDATE doctor SET delete_date = ? WHERE doctor_id = '"
+                            String deleteData = "UPDATE doctor SET delete_date = ?, status = 'inactive' WHERE doctor_id = '"
                                     + pData.getDoctorID() + "'";
 
                             try {
@@ -630,15 +644,20 @@ public class AdminDashboardController implements Initializable {
                                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
                                     prepare.setString(1, String.valueOf(sqlDate));
+                                    prepare.setDate(1, sqlDate); // Use setDate for java.sql.Date
                                     prepare.executeUpdate();
 
                                     doctorGetData();
                                     alert.successMessage("Deleted Successfully!");
 
+                                    alert.successMessage("Doctor ID: " + pData.getDoctorID() + " has been set to inactive successfully.");
+                                } else {
+                                    alert.errorMessage("Cancelled.");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
                         });
 
                         HBox manageBtn = new HBox(editButton, removeButton);
@@ -760,6 +779,7 @@ public class AdminDashboardController implements Initializable {
 
                                 // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
                                 Parent root = FXMLLoader.load(getClass().getResource("EditPatientForm.fxml"));
+                                Parent root = FXMLLoader.load(getClass().getResource("EditPatient.fxml"));
                                 Stage stage = new Stage();
 
                                 stage.setScene(new Scene(root));
@@ -788,10 +808,14 @@ public class AdminDashboardController implements Initializable {
                                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
                                     prepare.setString(1, String.valueOf(sqlDate));
+                                    prepare.setDate(1, sqlDate);
                                     prepare.setInt(2, pData.getPatientID());
                                     prepare.executeUpdate();
 
                                     doctorGetData();
+                                    patientListData = patientGetData(); // Refresh the patient list data
+                                    patients_tableView.setItems(patientListData); // Update the TableView
+
                                     alert.successMessage("Deleted Successfully!");
 
                                 }
@@ -816,6 +840,7 @@ public class AdminDashboardController implements Initializable {
         patients_tableView.setItems(patientListData);
 
     }
+
 
     public ObservableList<Appointment> appointmentGetData() {
 
@@ -1040,6 +1065,7 @@ public class AdminDashboardController implements Initializable {
 
         Data.temp_PatientID = pData.getPatientID();
         Data.temp_name = pData.getFullName();
+        Data.temp_doctorName=pData.getDoctor();
         Data.temp_date = String.valueOf(pData.getDate());
 
         payment_patientID.setText(String.valueOf(pData.getPatientID()));
@@ -1054,17 +1080,32 @@ public class AdminDashboardController implements Initializable {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("CheckOutPatient.fxml"));
             Stage stage = new Stage();
+        if (patients_tableView.getSelectionModel().isEmpty()) {
+            alert.errorMessage("Please select a patient to check out.");
+        } else {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("CheckOutPatient.fxml"));
+                Stage stage = new Stage();
 
             stage.setTitle("Hospital Management System | Check-Out");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+                stage.setTitle("Hospital Management System | Check-Out");
+                stage.setScene(new Scene(root));
+                stage.show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+    }
 
     }
 
     public void profileUpdateBtn() {
+    public void profileUpdateBtn()
+    {
         connect = DatabaseConnection.connectDB();
         if (profile_adminID.getText().isEmpty()
                 || profile_username.getText().isEmpty()
@@ -1104,6 +1145,7 @@ public class AdminDashboardController implements Initializable {
                     Path transfer = Paths.get(path);
 
                     Path copy = Paths.get("C:\\Users\\WINDOWS 10\\Documents\\NetBeansProjects\\HospitalManagementSystem\\src\\Admin_Directory\\"
+                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP PROJECT\\Doctor Pictures\\"
                             + Data.admin_id + ".jpg");
 
                     Files.copy(transfer, copy, StandardCopyOption.REPLACE_EXISTING);
@@ -1389,4 +1431,5 @@ public class AdminDashboardController implements Initializable {
     }
 
 }
+
 
