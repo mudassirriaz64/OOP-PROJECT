@@ -6,13 +6,13 @@ import java.sql.Date;
 public class Doctor {
 
     private Integer id;
-    private String doctorID;
+    private final String doctorID;
     private String password;
     private String fullName;
     private String email;
     private String gender;
     private Long mobileNumber;
-    private String specialization;
+    private final String specialization;
     private String address;
     private String image;
     private Date date;
@@ -67,7 +67,8 @@ public class Doctor {
         return password;
     }
 
-    public String getFullName() {
+    public  String getFullName()
+    {
         return fullName;
     }
 
