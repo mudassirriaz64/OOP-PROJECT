@@ -6,10 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,22 +105,22 @@ public class DoctorDashboardController implements Initializable {
     private BarChart<?, ?> dashboad_chart_DD;
 
     @FXML
-    private TableView<AppointmentData> dashboad_tableView;
+    private TableView<Appointment> dashboad_tableView;
 
     @FXML
-    private TableColumn<AppointmentData, String> dashboad_col_appointmentID;
+    private TableColumn<Appointment, String> dashboad_col_appointmentID;
 
     @FXML
-    private TableColumn<AppointmentData, String> dashboad_col_name;
+    private TableColumn<Appointment, String> dashboad_col_name;
 
     @FXML
-    private TableColumn<AppointmentData, String> dashboad_col_description;
+    private TableColumn<Appointment, String> dashboad_col_description;
 
     @FXML
-    private TableColumn<AppointmentData, String> dashboad_col_appointmentDate;
+    private TableColumn<Appointment, String> dashboad_col_appointmentDate;
 
     @FXML
-    private TableColumn<AppointmentData, String> dashboad_col_status;
+    private TableColumn<Appointment, String> dashboad_col_status;
 
     @FXML
     private AnchorPane patients_form;
@@ -177,37 +174,37 @@ public class DoctorDashboardController implements Initializable {
     private AnchorPane appointments_form;
 
     @FXML
-    private TableView<AppointmentData> appointments_tableView;
+    private TableView<Appointment> appointments_tableView;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_appointmentID;
+    private TableColumn<Appointment, String> appointments_col_appointmentID;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_name;
+    private TableColumn<Appointment, String> appointments_col_name;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_gender;
+    private TableColumn<Appointment, String> appointments_col_gender;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_contactNumber;
+    private TableColumn<Appointment, String> appointments_col_contactNumber;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_description;
+    private TableColumn<Appointment, String> appointments_col_description;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_date;
+    private TableColumn<Appointment, String> appointments_col_date;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_dateModify;
+    private TableColumn<Appointment, String> appointments_col_dateModify;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_dateDelete;
+    private TableColumn<Appointment, String> appointments_col_dateDelete;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_status;
+    private TableColumn<Appointment, String> appointments_col_status;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_col_action;
+    private TableColumn<Appointment, String> appointments_col_action;
 
     @FXML
     private TextField appointment_appointmentID;
@@ -312,8 +309,9 @@ public class DoctorDashboardController implements Initializable {
 
     private final AlertMessage alert = new AlertMessage();
 
-    public void dashbboardDisplayIP() {
-        String sql = "SELECT COUNT(id) FROM patient WHERE status = 'Inactive' AND doctor = '"
+    public void dashbboardDisplayIP()
+    {
+        String sql = "SELECT COUNT(id) FROM patient WHERE status = 'Inactive' AND Doctor_id = '"
                 + Data.doctor_id + "'";
         connect = DatabaseConnection.connectDB();
         int getIP = 0;
@@ -321,7 +319,8 @@ public class DoctorDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            if (result.next()) {
+            if (result.next())
+            {
                 getIP = result.getInt("COUNT(id)");
             }
             dashboard_IP.setText(String.valueOf(getIP));
@@ -331,7 +330,7 @@ public class DoctorDashboardController implements Initializable {
     }
 
     public void dashbboardDisplayTP() {
-        String sql = "SELECT COUNT(id) FROM patient WHERE doctor = '"
+        String sql = "SELECT COUNT(id) FROM patient WHERE Doctor_id = '"
                 + Data.doctor_id + "'";
         connect = DatabaseConnection.connectDB();
         int getTP = 0;
@@ -349,7 +348,7 @@ public class DoctorDashboardController implements Initializable {
     }
 
     public void dashbboardDisplayAP() {
-        String sql = "SELECT COUNT(id) FROM patient WHERE status = 'Active' AND doctor = '"
+        String sql = "SELECT COUNT(id) AS count FROM patient WHERE status = 'Active' AND Doctor_id = '"
                 + Data.doctor_id + "'";
         connect = DatabaseConnection.connectDB();
         int getAP = 0;
@@ -358,16 +357,26 @@ public class DoctorDashboardController implements Initializable {
             result = prepare.executeQuery();
 
             if (result.next()) {
-                getAP = result.getInt("COUNT(id)");
+                getAP = result.getInt("count");
             }
-            dashboard_TP.setText(String.valueOf(getAP));
+            dashboard_AP.setText(String.valueOf(getAP));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) result.close();
+                if (prepare != null) prepare.close();
+                if (connect != null) connect.close();
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
+
     public void dashbboardDisplayTA() {
-        String sql = "SELECT COUNT(id) FROM appointment WHERE status = 'Active' AND doctor = '"
+        String sql = "SELECT COUNT(id) FROM appointment WHERE status = 'Active' AND Doctor_id = '"
                 + Data.doctor_id + "'";
         connect = DatabaseConnection.connectDB();
         int getTA = 0;
@@ -384,11 +393,11 @@ public class DoctorDashboardController implements Initializable {
         }
     }
 
-    public ObservableList<AppointmentData> dashboardAppointmentTableView() {
+    public ObservableList<Appointment> dashboardAppointmentTableView() {
 
-        ObservableList<AppointmentData> listData = FXCollections.observableArrayList();
+        ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM appointment WHERE doctor = '"
+        String sql = "SELECT * FROM appointment WHERE Doctor_id = '"
                 + Data.doctor_id + "'";
 
         connect = DatabaseConnection.connectDB();
@@ -398,9 +407,9 @@ public class DoctorDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            AppointmentData aData;
+            Appointment aData;
             while (result.next()) {
-                aData = new AppointmentData(result.getInt("appointment_id"),
+                aData = new Appointment(result.getInt("appointment_id"),
                         result.getString("name"), result.getString("description"),
                         result.getDate("date"), result.getString("status"));
 
@@ -413,7 +422,7 @@ public class DoctorDashboardController implements Initializable {
         return listData;
     }
 
-    private ObservableList<AppointmentData> dashboardGetData;
+    private ObservableList<Appointment> dashboardGetData;
 
     public void dashboardDisplayData() {
         dashboardGetData = dashboardAppointmentTableView();
@@ -431,7 +440,7 @@ public class DoctorDashboardController implements Initializable {
 
         dashboad_chart_PD.getData().clear();
 
-        String sql = "SELECT DATE(date) AS appointment_date, COUNT(id) AS appointment_count FROM patient WHERE doctor = '" + Data.doctor_id + "' GROUP BY DATE(date) ORDER BY DATE(date) ASC LIMIT 8";
+        String sql = "SELECT DATE(date) AS appointment_date, COUNT(id) AS appointment_count FROM patient WHERE Doctor_id = '" + Data.doctor_id + "' GROUP BY DATE(date) ORDER BY DATE(date) ASC LIMIT 8";
 
         connect = DatabaseConnection.connectDB();
 
@@ -456,7 +465,7 @@ public class DoctorDashboardController implements Initializable {
 
         dashboad_chart_DD.getData().clear();
 
-        String sql = "SELECT DATE(date) AS appointment_date, COUNT(id) AS appointment_count FROM patient WHERE doctor = '" + Data.doctor_id + "' GROUP BY DATE(date) ORDER BY DATE(date) ASC LIMIT 7";
+        String sql = "SELECT DATE(date) AS appointment_date, COUNT(id) AS appointment_count FROM patient WHERE Doctor_id = '" + Data.doctor_id + "' GROUP BY DATE(date) ORDER BY DATE(date) ASC LIMIT 7";
 
         connect = DatabaseConnection.connectDB();
 
@@ -477,7 +486,9 @@ public class DoctorDashboardController implements Initializable {
 
     }
 
-    public void patientConfirmBtn() {
+
+    @FXML
+    private void patientConfirmBtn() {
 
         // CHECK IF SOME OR ALL FIELDS ARE EMPTY
         if (patients_patientID.getText().isEmpty()
@@ -505,7 +516,8 @@ public class DoctorDashboardController implements Initializable {
 
     }
 
-    public void patientAddBtn() {
+    @FXML
+    private void patientAddBtn() {
 
         if (patients_PA_patientID.getText().isEmpty()
                 || patients_PA_password.getText().isEmpty()
@@ -514,36 +526,49 @@ public class DoctorDashboardController implements Initializable {
                 || patients_PI_gender.getText().isEmpty()
                 || patients_PI_mobileNumber.getText().isEmpty()
                 || patients_PI_address.getText().isEmpty()) {
-            alert.errorMessage("Something wenr wrong");
+            alert.errorMessage("Something went wrong");
         } else {
+            Connection connect = null;
+            Statement statement = null;
+            ResultSet result = null;
+            PreparedStatement prepare = null;
 
-            DatabaseConnection.connectDB();
             try {
+                connect = DatabaseConnection.connectDB();
                 String doctorName = "";
                 String doctorSpecialization = "";
 
-                String getDoctor = "SELECT * FROM doctor WHERE doctor_id = '"
-                        + nav_adminID.getText() + "'";
-
-                statement = connect.createStatement();
-                result = statement.executeQuery(getDoctor);
+                String getDoctor = "SELECT * FROM doctor WHERE doctor_id = ?";
+                prepare = connect.prepareStatement(getDoctor);
+                prepare.setString(1, nav_adminID.getText());
+                result = prepare.executeQuery();
 
                 if (result.next()) {
                     doctorName = result.getString("full_name");
                     doctorSpecialization = result.getString("specialization");
                 }
-                // CHECK IF THE PATIENT ID THAT THE DOCTORS WANT TO INSERT/ADD IS EXISTING ALREADY
-                String checkPatientID = "SELECT * FROM patient WHERE patient_id = '"
-                        + patients_PA_patientID.getText() + "'";
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkPatientID);
+
+                // Close the previous statement and result set
+                prepare.close();
+                result.close();
+
+                // CHECK IF THE PATIENT ID THAT THE DOCTOR WANTS TO INSERT/ADD IS EXISTING ALREADY
+                String checkPatientID = "SELECT * FROM patient WHERE patient_id = ?";
+                prepare = connect.prepareStatement(checkPatientID);
+                prepare.setString(1, patients_PA_patientID.getText());
+                result = prepare.executeQuery();
+
                 if (result.next()) {
-                    alert.errorMessage(patients_PA_patientID.getText() + " is already exist");
+                    alert.errorMessage(patients_PA_patientID.getText() + " already exists");
                 } else {
-                    String insertData = "INSERT INTO Patient (patient_id, password, full_name, mobile_number, "
-                            + "address, doctor, specialization, date, "
-                            + "status) "
-                            + "VALUES(?,?,?,?,?,?,?,?,?)";
+                    if (doctorSpecialization == null || doctorSpecialization.isEmpty()) {
+                        doctorSpecialization = "N/A";
+                    }
+
+                    String insertData = "INSERT INTO patient (patient_id, password, full_name, mobile_number, "
+                            + "address, doctor, doctor_id, specialization, date, status) "
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
                     prepare = connect.prepareStatement(insertData);
@@ -552,10 +577,11 @@ public class DoctorDashboardController implements Initializable {
                     prepare.setString(3, patients_PI_patientName.getText());
                     prepare.setString(4, patients_PI_mobileNumber.getText());
                     prepare.setString(5, patients_PI_address.getText());
-                    prepare.setString(6, nav_adminID.getText());
-                    prepare.setString(7, doctorSpecialization);
-                    prepare.setString(8, "" + sqlDate);
-                    prepare.setString(9, "Confirm");
+                    prepare.setString(6, nav_username.getText());
+                    prepare.setString(7, nav_adminID.getText());
+                    prepare.setString(8, doctorSpecialization);
+                    prepare.setDate(9, sqlDate);
+                    prepare.setString(10, "Confirm");
 
                     prepare.executeUpdate();
 
@@ -566,15 +592,24 @@ public class DoctorDashboardController implements Initializable {
 
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (result != null) result.close();
+                    if (prepare != null) prepare.close();
+                    if (connect != null) connect.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-// NOW, LETS TRY
         }
     }
 
-    public void patientRecordBtn() {
+
+    @FXML
+    private void patientRecordBtn() {
         try {
             // LINK THE NAME OF YOUR FXML FOR RECORD PAGE
-            Parent root = FXMLLoader.load(getClass().getResource("RecordPageForm.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("PatientRecordPage.fxml"));
             Stage stage = new Stage();
 
             stage.setTitle("Hospital Management System | Record of Patients");
@@ -619,8 +654,7 @@ public class DoctorDashboardController implements Initializable {
     }
 
     public void appointmentInsertBtn() {
-
-//        CHECK IF THE FIELD(S) ARE EMPTY
+        // CHECK IF THE FIELD(S) ARE EMPTY
         if (appointment_appointmentID.getText().isEmpty()
                 || appointment_name.getText().isEmpty()
                 || appointment_gender.getSelectionModel().getSelectedItem() == null
@@ -631,36 +665,44 @@ public class DoctorDashboardController implements Initializable {
                 || appointment_schedule.getValue() == null) {
             alert.errorMessage("Please fill the blank fields");
         } else {
-            String checkAppointmentID = "SELECT * FROM appointment WHERE appointment_id = "
-                    + appointment_appointmentID.getText();
-            connect = DatabaseConnection.connectDB();
+            Connection connect = null;
+            PreparedStatement prepare = null;
+            ResultSet result = null;
+
             try {
-                statement = connect.createStatement();
-                result = statement.executeQuery(checkAppointmentID);
+                connect = DatabaseConnection.connectDB();
+
+                // CHECK IF THE APPOINTMENT ID ALREADY EXISTS
+                String checkAppointmentID = "SELECT * FROM appointment WHERE appointment_id = ?";
+                prepare = connect.prepareStatement(checkAppointmentID);
+                prepare.setString(1, appointment_appointmentID.getText());
+                result = prepare.executeQuery();
 
                 if (result.next()) {
-                    alert.errorMessage(appointment_appointmentID.getText() + " was already taken");
+                    alert.errorMessage(appointment_appointmentID.getText() + " is already taken");
                 } else {
+                    result.close(); // Close the previous ResultSet
+
+                    // GET DOCTOR SPECIALIZATION
+                    String getDoctorData = "SELECT * FROM doctor WHERE doctor_id = ?";
+                    prepare = connect.prepareStatement(getDoctorData);
+                    prepare.setString(1, Data.doctor_id);
+                    result = prepare.executeQuery();
+
                     String getSpecialization = "";
-                    String getDoctorData = "SELECT * FROM doctor WHERE doctor_id = '"
-                            + Data.doctor_id + "'";
-
-                    statement = connect.createStatement();
-                    result = statement.executeQuery(getDoctorData);
-
                     if (result.next()) {
-                        getSpecialization= result.getString("specialization");
+                        getSpecialization = result.getString("specialization");
                     }
+                    result.close(); // Close the previous ResultSet
 
-                    String insertData = "INSERT INTO appointment (appointment_id, name, gender"
-                            + ", description, diagnosis, treatment, mobile_number"
-                            + ", address, date, status, doctor, specialization, schedule) "
-                            + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    // INSERT NEW APPOINTMENT DATA
+                    String insertData = "INSERT INTO appointment (appointment_id, name, gender, description, diagnosis, treatment, mobile_number, address, date, status, doctor, doctor_id, specialization, schedule) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     prepare = connect.prepareStatement(insertData);
 
                     prepare.setString(1, appointment_appointmentID.getText());
                     prepare.setString(2, appointment_name.getText());
-                    prepare.setString(3, (String) appointment_gender.getSelectionModel().getSelectedItem());
+                    prepare.setString(3, appointment_gender.getSelectionModel().getSelectedItem().toString());
                     prepare.setString(4, appointment_description.getText());
                     prepare.setString(5, appointment_diagnosis.getText());
                     prepare.setString(6, appointment_treatment.getText());
@@ -668,28 +710,34 @@ public class DoctorDashboardController implements Initializable {
                     prepare.setString(8, appointment_address.getText());
 
                     java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
-
-                    prepare.setString(9, "" + sqlDate);
-                    prepare.setString(10, (String) appointment_status.getSelectionModel().getSelectedItem());
-                    prepare.setString(11, Data.doctor_id);
-                    prepare.setString(12, getSpecialization);
-                    prepare.setString(13, "" + appointment_schedule.getValue());
+                    prepare.setDate(9, sqlDate);
+                    prepare.setString(10, appointment_status.getSelectionModel().getSelectedItem().toString());
+                    prepare.setString(11, Data.doctor_name);
+                    prepare.setString(12, Data.doctor_id);
+                    prepare.setString(13, getSpecialization);
+                    prepare.setDate(14, java.sql.Date.valueOf(appointment_schedule.getValue()));
 
                     prepare.executeUpdate();
 
                     appointmentShowData();
                     appointmentAppointmentID();
-                    appointmentClearBtn();
-                    alert.successMessage("Successully added!");
-
+                    alert.successMessage("Successfully added!");
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (result != null) result.close();
+                    if (prepare != null) prepare.close();
+                    if (connect != null) connect.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
-
     }
+
 
     public void appointmentUpdateBtn() {
 
@@ -727,7 +775,6 @@ public class DoctorDashboardController implements Initializable {
 
                     appointmentShowData();
                     appointmentAppointmentID();
-                    appointmentClearBtn();
                     alert.successMessage("Successully Updated!");
                 }
             } catch (Exception e) {
@@ -737,46 +784,47 @@ public class DoctorDashboardController implements Initializable {
     }
 
     public void appointmentDeleteBtn() {
-
         if (appointment_appointmentID.getText().isEmpty()) {
             alert.errorMessage("Please select the item first");
         } else {
-
-            String updateData = "UPDATE appointment SET date_delete = ? WHERE appointment_id = '"
-                    + appointment_appointmentID.getText() + "'";
-
+            String updateData = "UPDATE appointment SET date_delete = ?, status = 'Inactive' WHERE appointment_id = ?";
             connect = DatabaseConnection.connectDB();
-
             try {
                 java.sql.Date sqlDate = new java.sql.Date(new Date().getTime());
 
-                if (alert.confirmationMessage("Are you sure you want to DELETE Appointment ID: "
-                        + appointment_appointmentID.getText() + "?")) {
+                if (alert.confirmationMessage("Are you sure you want to DELETE Appointment ID: " + appointment_appointmentID.getText() + "?")) {
                     prepare = connect.prepareStatement(updateData);
-
-                    prepare.setString(1, String.valueOf(sqlDate));
+                    prepare.setDate(1, sqlDate);
+                    prepare.setString(2, appointment_appointmentID.getText());
                     prepare.executeUpdate();
-
                     appointmentShowData();
-                    appointmentAppointmentID();
                     appointmentClearBtn();
-
-                    alert.successMessage("Successully Updated!");
+                    appointmentAppointmentID();
+                    alert.successMessage("Successfully Updated!");
                 } else {
                     alert.errorMessage("Cancelled.");
                 }
-
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                // Close the prepared statement and connection
+                try {
+                    if (prepare != null) {
+                        prepare.close();
+                    }
+                    if (connect != null) {
+                        connect.close();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
-
     }
+
 
     // TO CLEAR ALL FIELDS
     public void appointmentClearBtn() {
-        appointment_appointmentID.clear();
         appointment_name.clear();
         appointment_gender.getSelectionModel().clearSelection();
         appointment_mobileNumber.clear();
@@ -790,7 +838,8 @@ public class DoctorDashboardController implements Initializable {
 
     private Integer appointmentID;
 
-    public void appointmentGetAppointmentID() {
+    public void appointmentGetAppointmentID()
+    {
         String sql = "SELECT MAX(appointment_id) FROM Appointment";
         connect = DatabaseConnection.connectDB();
 
@@ -812,7 +861,8 @@ public class DoctorDashboardController implements Initializable {
         }
     }
 
-    public void appointmentAppointmentID() {
+    public void appointmentAppointmentID()
+    {
         appointmentGetAppointmentID();
 
         appointment_appointmentID.setText("" + appointmentID);
@@ -844,11 +894,12 @@ public class DoctorDashboardController implements Initializable {
 
     }
 
-    public ObservableList<AppointmentData> appointmentGetData() {
+    public ObservableList<Appointment> appointmentGetData()
+    {
 
-        ObservableList<AppointmentData> listData = FXCollections.observableArrayList();
+        ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM appointment WHERE date_delete IS NULL and doctor = '"
+        String sql = "SELECT * FROM appointment WHERE date_delete IS NULL and Doctor_id = '"
                 + Data.doctor_id + "'";
 
         connect = DatabaseConnection.connectDB();
@@ -858,19 +909,18 @@ public class DoctorDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            AppointmentData appData;
+            Appointment appData;
 
             while (result.next())
             {
 
-                appData = new AppointmentData(result.getInt("appointment_id"),
+                appData = new Appointment(result.getInt("appointment_id"),
                         result.getString("name"), result.getString("gender"),
                         result.getLong("mobile_number"), result.getString("description"),
                         result.getString("diagnosis"), result.getString("treatment"),
                         result.getString("address"), result.getDate("date"),
                         result.getDate("date_modify"), result.getDate("date_delete"),
                         result.getString("status"), result.getDate("schedule"));
-                // STORE ALL DATA
                 listData.add(appData);
             }
 
@@ -881,7 +931,7 @@ public class DoctorDashboardController implements Initializable {
         return listData;
     }
 
-    public ObservableList<AppointmentData> appoinmentListData;
+    public ObservableList<Appointment> appoinmentListData;
 
     public void appointmentShowData() {
         appoinmentListData = appointmentGetData();
@@ -902,7 +952,7 @@ public class DoctorDashboardController implements Initializable {
 
     public void appointmentSelect() {
 
-        AppointmentData appData = appointments_tableView.getSelectionModel().getSelectedItem();
+        Appointment appData = appointments_tableView.getSelectionModel().getSelectedItem();
         int num = appointments_tableView.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
@@ -979,7 +1029,7 @@ public class DoctorDashboardController implements Initializable {
                     Path transfer = Paths.get(path);
 
                     // LINK YOUR DIRECTORY FOLDER
-                    Path copy = Paths.get("C:\\Users\\WINDOWS 10\\Documents\\NetBeansProjects\\HospitalManagementSystem\\src\\Directory\\"
+                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP PROJECT\\Pictures\\"
                             + Data.doctor_id + ".jpg");
 
                     try {

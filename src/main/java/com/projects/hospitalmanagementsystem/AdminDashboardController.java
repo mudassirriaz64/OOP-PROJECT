@@ -110,124 +110,124 @@ public class AdminDashboardController implements Initializable {
     private BarChart<?, ?> dashboad_chart_DD;
 
     @FXML
-    private TableView<DoctorData> dashboad_tableView;
+    private TableView<Doctor> dashboad_tableView;
 
     @FXML
-    private TableColumn<DoctorData, String> dashboad_col_doctorID;
+    private TableColumn<Doctor, String> dashboad_col_doctorID;
 
     @FXML
-    private TableColumn<DoctorData, String> dashboad_col_name;
+    private TableColumn<Doctor, String> dashboad_col_name;
 
     @FXML
-    private TableColumn<DoctorData, String> dashboad_col_specialization;
+    private TableColumn<Doctor, String> dashboad_col_specialization;
 
     @FXML
-    private TableColumn<DoctorData, String> dashboad_col_status;
+    private TableColumn<Doctor, String> dashboad_col_status;
 
     @FXML
     private AnchorPane doctors_form;
 
     @FXML
-    private TableView<DoctorData> doctors_tableView;
+    private TableView<Doctor> doctors_tableView;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_doctorID;
+    private TableColumn<Doctor, String> doctors_col_doctorID;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_name;
+    private TableColumn<Doctor, String> doctors_col_name;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_gender;
+    private TableColumn<Doctor, String> doctors_col_gender;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_contactNumber;
+    private TableColumn<Doctor, String> doctors_col_contactNumber;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_email;
+    private TableColumn<Doctor, String> doctors_col_email;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_specialization;
+    private TableColumn<Doctor, String> doctors_col_specialization;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_address;
+    private TableColumn<Doctor, String> doctors_col_address;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_status;
+    private TableColumn<Doctor, String> doctors_col_status;
 
     @FXML
-    private TableColumn<DoctorData, String> doctors_col_action;
+    private TableColumn<Doctor, String> doctors_col_action;
 
     @FXML
     private AnchorPane patients_form;
 
     @FXML
-    private TableView<PatientData> patients_tableView;
+    private TableView<Patient> patients_tableView;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_patientID;
+    private TableColumn<Patient, String> patients_col_patientID;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_name;
+    private TableColumn<Patient, String> patients_col_name;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_gender;
+    private TableColumn<Patient, String> patients_col_gender;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_contactNumber;
+    private TableColumn<Patient, String> patients_col_contactNumber;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_description;
+    private TableColumn<Patient, String> patients_col_description;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_date;
+    private TableColumn<Patient, String> patients_col_date;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_dateModify;
+    private TableColumn<Patient, String> patients_col_dateModify;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_dateDelete;
+    private TableColumn<Patient, String> patients_col_dateDelete;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_status;
+    private TableColumn<Patient, String> patients_col_status;
 
     @FXML
-    private TableColumn<PatientData, String> patients_col_action;
+    private TableColumn<Patient, String> patients_col_action;
 
     @FXML
     private AnchorPane appointments_form;
 
     @FXML
-    private TableView<AppointmentData> appointments_tableView;
+    private TableView<Appointment> appointments_tableView;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_appointmentID;
+    private TableColumn<Appointment, String> appointments_appointmentID;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_name;
+    private TableColumn<Appointment, String> appointments_name;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_gender;
+    private TableColumn<Appointment, String> appointments_gender;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_contactNumber;
+    private TableColumn<Appointment, String> appointments_contactNumber;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_description;
+    private TableColumn<Appointment, String> appointments_description;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_date;
+    private TableColumn<Appointment, String> appointments_date;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_dateModify;
+    private TableColumn<Appointment, String> appointments_dateModify;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_dateDelete;
+    private TableColumn<Appointment, String> appointments_dateDelete;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_status;
+    private TableColumn<Appointment, String> appointments_status;
 
     @FXML
-    private TableColumn<AppointmentData, String> appointments_action;
+    private TableColumn<Appointment, String> appointments_action;
 
     @FXML
     private AnchorPane profile_form;
@@ -269,25 +269,25 @@ public class AdminDashboardController implements Initializable {
     private AnchorPane payment_form;
 
     @FXML
-    private TableView<PatientData> payment_tableView;
+    private TableView<Patient> payment_tableView;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_patientID;
+    private TableColumn<Patient, String> payment_col_patientID;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_name;
+    private TableColumn<Patient, String> payment_col_name;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_gender;
+    private TableColumn<Patient, String> payment_col_gender;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_diagnosis;
+    private TableColumn<Patient, String> payment_col_diagnosis;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_doctor;
+    private TableColumn<Patient, String> payment_col_doctor;
 
     @FXML
-    private TableColumn<PatientData, String> payment_col_date;
+    private TableColumn<Patient, String> payment_col_date;
 
     @FXML
     private Circle payment_circle;
@@ -412,9 +412,9 @@ public class AdminDashboardController implements Initializable {
 
     }
 
-    public ObservableList<DoctorData> dashboardGetDoctorData() {
+    public ObservableList<Doctor> dashboardGetDoctorData() {
 
-        ObservableList<DoctorData> listData = FXCollections.observableArrayList();
+        ObservableList<Doctor> listData = FXCollections.observableArrayList();
         String sql = "SELECT * FROM doctor WHERE delete_date IS NULL";
 
         connect = DatabaseConnection.connectDB();
@@ -424,10 +424,10 @@ public class AdminDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            DoctorData dData;
+            Doctor dData;
 
             while (result.next()) {
-                dData = new DoctorData(result.getString("doctor_id"),
+                dData = new Doctor(result.getString("doctor_id"),
                         result.getString("full_name"), result.getString("specialization"),
                         result.getString("status"));
 
@@ -440,7 +440,7 @@ public class AdminDashboardController implements Initializable {
         return listData;
     }
 
-    public ObservableList<DoctorData> dashboardGetDoctorListData;
+    public ObservableList<Doctor> dashboardGetDoctorListData;
 
     public void dashboardGetDoctorDisplayData() {
         dashboardGetDoctorListData = dashboardGetDoctorData();
@@ -502,8 +502,8 @@ public class AdminDashboardController implements Initializable {
 
     }
 
-    public ObservableList<DoctorData> doctorGetData() {
-        ObservableList<DoctorData> listData = FXCollections.observableArrayList();
+    public ObservableList<Doctor> doctorGetData() {
+        ObservableList<Doctor> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM doctor";
 
@@ -512,9 +512,9 @@ public class AdminDashboardController implements Initializable {
         try {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
-            DoctorData dData;
+            Doctor dData;
             while (result.next()) {
-                dData = new DoctorData(result.getInt("id"), result.getString("doctor_id"),
+                dData = new Doctor(result.getInt("id"), result.getString("doctor_id"),
                         result.getString("password"), result.getString("full_name"),
                         result.getString("email"), result.getString("gender"),
                         result.getLong("mobile_number"), result.getString("specialization"),
@@ -530,7 +530,7 @@ public class AdminDashboardController implements Initializable {
         return listData;
     }
 
-    private ObservableList<DoctorData> doctorListData;
+    private ObservableList<Doctor> doctorListData;
 
     public void doctorDisplayData() {
         doctorListData = doctorGetData();
@@ -553,8 +553,8 @@ public class AdminDashboardController implements Initializable {
         connect = DatabaseConnection.connectDB();
         doctorListData = doctorGetData();
 
-        Callback<TableColumn<DoctorData, String>, TableCell<DoctorData, String>> cellFactory = (TableColumn<DoctorData, String> param) -> {
-            final TableCell<DoctorData, String> cell = new TableCell<DoctorData, String>() {
+        Callback<TableColumn<Doctor, String>, TableCell<Doctor, String>> cellFactory = (TableColumn<Doctor, String> param) -> {
+            final TableCell<Doctor, String> cell = new TableCell<Doctor, String>() {
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
@@ -580,7 +580,7 @@ public class AdminDashboardController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             try {
 
-                                DoctorData pData = doctors_tableView.getSelectionModel().getSelectedItem();
+                                Doctor pData = doctors_tableView.getSelectionModel().getSelectedItem();
                                 int num = doctors_tableView.getSelectionModel().getSelectedIndex();
 
                                 if ((num - 1) < -1) {
@@ -612,7 +612,7 @@ public class AdminDashboardController implements Initializable {
                         });
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            DoctorData pData = doctors_tableView.getSelectionModel().getSelectedItem();
+                            Doctor pData = doctors_tableView.getSelectionModel().getSelectedItem();
                             int num = doctors_tableView.getSelectionModel().getSelectedIndex();
 
                             if ((num - 1) < -1) {
@@ -658,9 +658,9 @@ public class AdminDashboardController implements Initializable {
 
     }
 
-    public ObservableList<PatientData> patientGetData() {
+    public ObservableList<Patient> patientGetData() {
 
-        ObservableList<PatientData> listData = FXCollections.observableArrayList();
+        ObservableList<Patient> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM patient";
 
@@ -670,10 +670,10 @@ public class AdminDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            PatientData pData;
+            Patient pData;
 
             while (result.next()) {
-                pData = new PatientData(result.getInt("id"), result.getInt("patient_id"),
+                pData = new Patient(result.getInt("id"), result.getInt("patient_id"),
                         result.getString("password"), result.getString("full_name"),
                         result.getLong("mobile_number"), result.getString("gender"),
                         result.getString("address"),
@@ -693,7 +693,7 @@ public class AdminDashboardController implements Initializable {
         return listData;
     }
 
-    public ObservableList<PatientData> patientListData;
+    public ObservableList<Patient> patientListData;
 
     public void patientDisplayData() {
         patientListData = patientGetData();
@@ -716,8 +716,8 @@ public class AdminDashboardController implements Initializable {
         connect = DatabaseConnection.connectDB();
         patientListData = patientGetData();
 
-        Callback<TableColumn<PatientData, String>, TableCell<PatientData, String>> cellFactory = (TableColumn<PatientData, String> param) -> {
-            final TableCell<PatientData, String> cell = new TableCell<PatientData, String>() {
+        Callback<TableColumn<Patient, String>, TableCell<Patient, String>> cellFactory = (TableColumn<Patient, String> param) -> {
+            final TableCell<Patient, String> cell = new TableCell<Patient, String>() {
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
@@ -743,7 +743,7 @@ public class AdminDashboardController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             try {
 
-                                PatientData pData = patients_tableView.getSelectionModel().getSelectedItem();
+                                Patient pData = patients_tableView.getSelectionModel().getSelectedItem();
                                 int num = patients_tableView.getSelectionModel().getSelectedIndex();
 
                                 if ((num - 1) < -1) {
@@ -771,7 +771,7 @@ public class AdminDashboardController implements Initializable {
                         });
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            PatientData pData = patients_tableView.getSelectionModel().getSelectedItem();
+                            Patient pData = patients_tableView.getSelectionModel().getSelectedItem();
                             int num = patients_tableView.getSelectionModel().getSelectedIndex();
 
                             if ((num - 1) < -1) {
@@ -779,8 +779,7 @@ public class AdminDashboardController implements Initializable {
                                 return;
                             }
 
-                            String deleteData = "UPDATE patient SET date_delete = ? WHERE patient_id = '"
-                                    + pData.getPatientID() + "'";
+                            String deleteData = "UPDATE patient SET date_delete = ?, status = 'Inactive' WHERE patient_id = ?";
 
                             try {
                                 if (alert.confirmationMessage("Are you sure you want to delete Patient ID: " + pData.getPatientID() + "?")) {
@@ -789,6 +788,7 @@ public class AdminDashboardController implements Initializable {
                                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
                                     prepare.setString(1, String.valueOf(sqlDate));
+                                    prepare.setInt(2, pData.getPatientID());
                                     prepare.executeUpdate();
 
                                     doctorGetData();
@@ -817,9 +817,9 @@ public class AdminDashboardController implements Initializable {
 
     }
 
-    public ObservableList<AppointmentData> appointmentGetData() {
+    public ObservableList<Appointment> appointmentGetData() {
 
-        ObservableList<AppointmentData> listData = FXCollections.observableArrayList();
+        ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM appointment";
 
@@ -829,12 +829,9 @@ public class AdminDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            AppointmentData aData;
+            Appointment aData;
             while (result.next()) {
-//            AppointmentData(Integer id, Integer appointmentID, String name, String gender,
-//            Long mobileNumber, String description, String diagnosis, String treatment, String address,
-//            Date date, Date dateModify, Date dateDelete, String status, Date schedule)
-                aData = new AppointmentData(result.getInt("id"), result.getInt("appointment_id"),
+                aData = new Appointment(result.getInt("id"), result.getInt("appointment_id"),
                         result.getString("name"), result.getString("gender"), result.getLong("mobile_number"),
                         result.getString("description"), result.getString("diagnosis"),
                         result.getString("treatment"), result.getString("address"),
@@ -850,7 +847,7 @@ public class AdminDashboardController implements Initializable {
         return listData;
     }
 
-    private ObservableList<AppointmentData> appointmentListData;
+    private ObservableList<Appointment> appointmentListData;
 
     public void appointmentDisplayData() {
         appointmentListData = appointmentGetData();
@@ -874,8 +871,8 @@ public class AdminDashboardController implements Initializable {
         connect = DatabaseConnection.connectDB();
         appointmentListData = appointmentGetData();
 
-        Callback<TableColumn<AppointmentData, String>, TableCell<AppointmentData, String>> cellFactory = (TableColumn<AppointmentData, String> param) -> {
-            final TableCell<AppointmentData, String> cell = new TableCell<AppointmentData, String>() {
+        Callback<TableColumn<Appointment, String>, TableCell<Appointment, String>> cellFactory = (TableColumn<Appointment, String> param) -> {
+            final TableCell<Appointment, String> cell = new TableCell<Appointment, String>() {
                 public void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
 
@@ -901,7 +898,7 @@ public class AdminDashboardController implements Initializable {
                         editButton.setOnAction((ActionEvent event) -> {
                             try {
 
-                                AppointmentData aData = appointments_tableView.getSelectionModel().getSelectedItem();
+                                Appointment aData = appointments_tableView.getSelectionModel().getSelectedItem();
                                 int num = appointments_tableView.getSelectionModel().getSelectedIndex();
 
                                 if ((num - 1) < -1) {
@@ -934,7 +931,7 @@ public class AdminDashboardController implements Initializable {
                         });
 
                         removeButton.setOnAction((ActionEvent event) -> {
-                            AppointmentData aData = appointments_tableView.getSelectionModel().getSelectedItem();
+                            Appointment aData = appointments_tableView.getSelectionModel().getSelectedItem();
                             int num = appointments_tableView.getSelectionModel().getSelectedIndex();
 
                             if ((num - 1) < -1) {
@@ -980,9 +977,9 @@ public class AdminDashboardController implements Initializable {
 
     }
 
-    public ObservableList<PatientData> paymentGetData() {
+    public ObservableList<Patient> paymentGetData() {
 
-        ObservableList<PatientData> listData = FXCollections.observableArrayList();
+        ObservableList<Patient> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM patient WHERE date_delete IS NULL AND status_pay IS NULL";
         connect = DatabaseConnection.connectDB();
@@ -991,12 +988,11 @@ public class AdminDashboardController implements Initializable {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
-            PatientData pData;
-            while (result.next()) {
-//                (Integer id, Integer patientID, String fullName, String gender
-//            , String description, String diagnosis, String treatment
-//            , String doctor, String image, Date date)
-                pData = new PatientData(result.getInt("id"),
+            Patient pData;
+            while (result.next())
+            {
+
+                pData = new Patient(result.getInt("id"),
                         result.getInt("patient_id"), result.getString("full_name"),
                         result.getString("gender"), result.getString("description"),
                         result.getString("diagnosis"), result.getString("treatment"),
@@ -1010,7 +1006,7 @@ public class AdminDashboardController implements Initializable {
         return listData;
     }
 
-    public ObservableList<PatientData> paymentListData;
+    public ObservableList<Patient> paymentListData;
 
     public void paymentDisplayData() {
         paymentListData = paymentGetData();
@@ -1028,7 +1024,7 @@ public class AdminDashboardController implements Initializable {
 
     public void paymentSelectItems() {
 
-        PatientData pData = payment_tableView.getSelectionModel().getSelectedItem();
+        Patient pData = payment_tableView.getSelectionModel().getSelectedItem();
         int num = payment_tableView.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
