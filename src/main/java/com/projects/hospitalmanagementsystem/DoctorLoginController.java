@@ -125,7 +125,7 @@ public class DoctorLoginController implements Initializable {
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (!result.next()) {
+                if (result.next()) {
 
                     alert.errorMessage("Need the confirmation of the Admin!");
                 } else {
