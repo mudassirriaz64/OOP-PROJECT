@@ -116,14 +116,12 @@ public class PatientLoginController implements Initializable {
                         Data.patient_id = Integer.parseInt(login_patientID.getText());
 
                         alert.successMessage("Login Successfully!");
-                        // LINK YOUR PATIENT MAIN FORM
-//                        Parent root = FXMLLoader.load(getClass().getResource("PatientMainForm.fxml"));
-//                        Stage stage = new Stage();
-//
-//                        stage.setScene(new Scene(root));
-//                        stage.show();
+                        Parent root = FXMLLoader.load(getClass().getResource("PatientDashboard.fxml"));
+                        Stage stage = new Stage();
 
-                        // TO HIDE YOUR LOGIN FORM
+                        stage.setScene(new Scene(root));
+                        stage.show();
+
                         login_loginBtn.getScene().getWindow().hide();
                     } else {
                         alert.errorMessage("Incorrect Patient ID/Password");
