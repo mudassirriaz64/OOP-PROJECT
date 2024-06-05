@@ -51,7 +51,6 @@ public class EditPatientController implements Initializable {
     private ResultSet result;
 
     public void updateBtn() {
-
         if (edit_patientID.getText().isEmpty() || edit_name.getText().isEmpty()
                 || edit_gender.getSelectionModel().getSelectedItem() == null
                 || edit_contactNumber.getText().isEmpty()
@@ -59,14 +58,19 @@ public class EditPatientController implements Initializable {
                 || edit_status.getSelectionModel().getSelectedItem() == null) {
             alert.errorMessage("Please fill all blank fields");
         } else {
-            String updateData = "UPDATE patient SET full_name = ?, gender = ?"
-                    + ", mobile_number = ?, address = ?, status = ?, date_modify = ? "
-                    + "WHERE patient_id = '"
-                    + edit_patientID.getText() + "'";
+            String updateData;
+            if ("Active".equalsIgnoreCase(edit_status.getSelectionModel().getSelectedItem())) {
+                // If the status is Active, set delete_date to NULL
+                updateData = "UPDATE patient SET full_name = ?, gender = ?, mobile_number = ?, address = ?, status = ?, date_modify = ?, date_delete = NULL "
+                        + "WHERE patient_id = ?";
+            } else {
+                // If the status is not Active, update delete_date to current date
+                updateData = "UPDATE patient SET full_name = ?, gender = ?, mobile_number = ?, address = ?, status = ?, date_modify = ?, date_delete = ? "
+                        + "WHERE patient_id = ?";
+            }
             connect = DatabaseConnection.connectDB();
             try {
-                if (alert.confirmationMessage("Are you sure you want to UPDATE Patient ID: " + edit_patientID.getText()
-                        + "?")) {
+                if (alert.confirmationMessage("Are you sure you want to UPDATE Patient ID: " + edit_patientID.getText() + "?")) {
                     prepare = connect.prepareStatement(updateData);
                     Date date = new Date();
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -76,6 +80,12 @@ public class EditPatientController implements Initializable {
                     prepare.setString(4, edit_address.getText());
                     prepare.setString(5, edit_status.getSelectionModel().getSelectedItem());
                     prepare.setString(6, String.valueOf(sqlDate));
+                    if (!"Active".equalsIgnoreCase(edit_status.getSelectionModel().getSelectedItem())) {
+                        prepare.setString(7, String.valueOf(sqlDate)); // Set delete_date to current date if status is not Active
+                        prepare.setString(8, edit_patientID.getText());
+                    } else {
+                        prepare.setString(7, edit_patientID.getText()); // No delete_date update needed if status is Active
+                    }
                     prepare.executeUpdate();
                     alert.successMessage("Updated Successfully!");
                 } else {
@@ -84,10 +94,9 @@ public class EditPatientController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
     }
+
 
     // CLOSE THE EDITPATIENTFORM FXML FILE AND OPEN IT AGAIN
     public void setField() {
