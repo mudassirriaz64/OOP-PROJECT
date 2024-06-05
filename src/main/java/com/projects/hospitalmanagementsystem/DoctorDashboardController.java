@@ -41,10 +41,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-/**
- *
- * @author WINDOWS 10
- */
 public class DoctorDashboardController implements Initializable {
 
     @FXML
@@ -398,7 +394,7 @@ public class DoctorDashboardController implements Initializable {
         ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
         String sql = "SELECT * FROM appointment WHERE Doctor_id = '"
-                + Data.doctor_id + "'";
+                + Data.doctor_id + "' and status='Active' and date_delete IS NULL ";
 
         connect = DatabaseConnection.connectDB();
 
@@ -408,7 +404,8 @@ public class DoctorDashboardController implements Initializable {
             result = prepare.executeQuery();
 
             Appointment aData;
-            while (result.next()) {
+            while (result.next())
+            {
                 aData = new Appointment(result.getInt("appointment_id"),
                         result.getString("name"), result.getString("description"),
                         result.getDate("date"), result.getString("status"));
@@ -899,8 +896,8 @@ public class DoctorDashboardController implements Initializable {
 
         ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM appointment WHERE date_delete IS NULL and Doctor_id = '"
-                + Data.doctor_id + "'";
+        String sql = "SELECT * FROM appointment  Doctor_id = '"
+                + Data.doctor_id + "'" ;
 
         connect = DatabaseConnection.connectDB();
 
@@ -1029,7 +1026,7 @@ public class DoctorDashboardController implements Initializable {
                     Path transfer = Paths.get(path);
 
                     // LINK YOUR DIRECTORY FOLDER
-                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP PROJECT\\Pictures\\"
+                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP PROJECT\\Doctor Pictures\\"
                             + Data.doctor_id + ".jpg");
 
                     try {
