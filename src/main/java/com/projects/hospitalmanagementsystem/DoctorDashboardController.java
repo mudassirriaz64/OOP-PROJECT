@@ -896,7 +896,7 @@ public class DoctorDashboardController implements Initializable {
 
         ObservableList<Appointment> listData = FXCollections.observableArrayList();
 
-        String sql = "SELECT * FROM appointment  Doctor_id = '"
+        String sql = "SELECT * FROM appointment WHERE Doctor_id = '"
                 + Data.doctor_id + "'" ;
 
         connect = DatabaseConnection.connectDB();
@@ -1026,7 +1026,7 @@ public class DoctorDashboardController implements Initializable {
                     Path transfer = Paths.get(path);
 
                     // LINK YOUR DIRECTORY FOLDER
-                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP PROJECT\\Doctor Pictures\\"
+                    Path copy = Paths.get("C:\\Users\\user\\Projects\\OOP PROJECT\\Doctor Pictures\\"
                             + Data.doctor_id + ".jpg");
 
                     try {
@@ -1066,16 +1066,19 @@ public class DoctorDashboardController implements Initializable {
 
     }
 
-    public void profileLabels() {
+    public void profileLabels()
+    {
         String selectData = "SELECT * FROM doctor WHERE doctor_id = '"
                 + Data.doctor_id + "'";
         connect = DatabaseConnection.connectDB();
 
-        try {
+        try
+        {
             prepare = connect.prepareStatement(selectData);
             result = prepare.executeQuery();
 
-            if (result.next()) {
+            if (result.next())
+            {
                 profile_label_doctorID.setText(result.getString("doctor_id"));
                 profile_label_name.setText(result.getString("full_name"));
                 profile_label_email.setText(result.getString("email"));
