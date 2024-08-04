@@ -1,4 +1,3 @@
-
 package com.projects.hospitalmanagementsystem;
 
 /**
@@ -15,11 +14,16 @@ public class Data {
 
     public static Integer patient_id;
 
+    public static String staff_id;
+    public static String staff_name;
+
     public static String[] gender = {"Male", "Female", "Others"};
 
     public static String[] status = {"Active", "Inactive", "Confirm"};
 
     public static String[] specialization = {"Allergist", "Dermatologist", "Ophthalmologist", "Gynecologist", "Cardiologist"};
+
+    public static String[] roles = {"Nurse", "Technician", "Pharmacist", "Therapist", "Receptionist"};
 
     public static Integer temp_PatientID;
     public static String temp_name;
@@ -41,6 +45,17 @@ public class Data {
     public static String temp_doctorAddress;
     public static String temp_doctorStatus;
 
+    public static String temp_staffID;
+    public static String temp_staffName;
+    public static String temp_staffEmail;
+    public static String temp_staffPassword;
+    public static String temp_staffRole;
+    public static String temp_staffGender;
+    public static String temp_staffMobileNumber;
+    public static String temp_staffImagePath;
+    public static String temp_staffAddress;
+    public static String temp_staffStatus;
+
     public static String temp_appID;
     public static String temp_appName;
     public static String temp_appGender;
@@ -53,4 +68,5 @@ public class Data {
     public static String temp_appSpecialization;
     public static String temp_appStatus;
 
+    public static String[] shifts;
 }
