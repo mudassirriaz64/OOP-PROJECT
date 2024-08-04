@@ -125,8 +125,8 @@ public class DoctorLoginController implements Initializable {
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (result.next()) {
-
+                if (result.next())
+                {
                     alert.errorMessage("Need the confirmation of the Admin!");
                 } else {
                     prepare = connect.prepareStatement(sql);
@@ -332,7 +332,6 @@ public class DoctorLoginController implements Initializable {
             }
 
         } else if (login_user.getSelectionModel().getSelectedItem() == "Doctor Portal") {
-
             try {
 
                 Parent root = FXMLLoader.load(getClass().getResource("DoctorLoginPage.fxml"));
@@ -369,6 +368,27 @@ public class DoctorLoginController implements Initializable {
                 e.printStackTrace();
             }
 
+        }
+        else if (login_user.getSelectionModel().getSelectedItem()=="Staff Portal")
+        {
+            try
+            {
+                Parent root=FXMLLoader.load(getClass().getResource("StaffLoginPage.fxml"));
+                Stage stage=new Stage();
+
+                stage.setTitle("Hospital Management System");
+
+                stage.setMinHeight(580);
+                stage.setMinWidth(340);
+
+                stage.setScene(new Scene(root));
+                stage.show();
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         login_user.getScene().getWindow().hide();
