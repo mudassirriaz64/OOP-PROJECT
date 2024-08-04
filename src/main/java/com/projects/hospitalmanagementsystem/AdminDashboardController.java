@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,6 +49,8 @@ import javafx.util.Callback;
 
 public class AdminDashboardController implements Initializable {
 
+    @FXML
+    private AnchorPane duties_form;
     // GIVE NAME OF ALL COMPONENTS
     @FXML
     private AnchorPane main_form;
@@ -77,10 +80,16 @@ public class AdminDashboardController implements Initializable {
     private Button doctors_btn;
 
     @FXML
+    private Button staff_btn;
+
+    @FXML
     private Button patients_btn;
 
     @FXML
     private Button appointments_btn;
+
+    @FXML
+    private Button duties_btn;
 
     @FXML
     private Button payment_btn;
@@ -101,13 +110,13 @@ public class AdminDashboardController implements Initializable {
     private Label dashboard_AP;
 
     @FXML
-    private Label dashboard_tA;
+    private Label dashboard_TA;
 
     @FXML
-    private AreaChart<?, ?> dashboad_chart_PD;
+    private AreaChart<?, ?> dashboard_chart_PD;
 
     @FXML
-    private BarChart<?, ?> dashboad_chart_DD;
+    private BarChart<?, ?> dashboard_chart_DD;
 
     @FXML
     private TableView<Doctor> dashboad_tableView;
@@ -156,6 +165,39 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private TableColumn<Doctor, String> doctors_col_action;
+
+    @FXML
+    private AnchorPane staff_form;
+
+    @FXML
+    private TableView<Staff> staff_tableView;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_staffID;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_name;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_gender;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_contactNumber;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_email;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_role;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_address;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_status;
+
+    @FXML
+    private TableColumn<Staff, String> staff_col_action;
 
     @FXML
     private AnchorPane patients_form;
@@ -228,6 +270,7 @@ public class AdminDashboardController implements Initializable {
 
     @FXML
     private TableColumn<Appointment, String> appointments_action;
+
 
     @FXML
     private AnchorPane profile_form;
@@ -320,6 +363,8 @@ public class AdminDashboardController implements Initializable {
 
     private Image image;
 
+    private ObservableList<Staff> staffListData;
+
     public void dashboardAD() {
 
         String sql = "SELECT COUNT(id) FROM doctor WHERE status = 'Active' AND delete_date IS NULL";
@@ -345,7 +390,7 @@ public class AdminDashboardController implements Initializable {
 
     public void dashboardTP() {
 
-        String sql = "SELECT COUNT(id) FROM patient WHERE date_delete IS NULL";
+        String sql = "SELECT COUNT(id) FROM patient";
 
         connect = DatabaseConnection.connectDB();
 
@@ -404,7 +449,7 @@ public class AdminDashboardController implements Initializable {
             if (result.next()) {
                 tempTA = result.getInt("COUNT(id)");
             }
-            dashboard_AP.setText(String.valueOf(tempTA));
+            dashboard_TA.setText(String.valueOf(tempTA));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -454,8 +499,10 @@ public class AdminDashboardController implements Initializable {
 
     }
 
+
+
     public void dashboardPatientDataChart() {
-        dashboad_chart_PD.getData().clear();
+        dashboard_chart_PD.getData().clear();
 
         String selectData = "SELECT date, COUNT(id) FROM patient WHERE date_delete IS NULL GROUP BY date LIMIT 8";
 
@@ -470,7 +517,7 @@ public class AdminDashboardController implements Initializable {
                 chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
             }
 
-            dashboad_chart_PD.getData().add(chart);
+            dashboard_chart_PD.getData().add(chart);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -479,13 +526,12 @@ public class AdminDashboardController implements Initializable {
     }
 
     public void dashboardDoctorDataChart() {
-        dashboad_chart_DD.getData().clear();
+        dashboard_chart_DD.getData().clear();
 
-        String selectData = "SELECT date, COUNT(id) FROM patient WHERE date_delete IS NULL GROUP BY date LIMIT 8";
+        String selectData = "SELECT date, COUNT(id) FROM doctor WHERE delete_date IS NULL GROUP BY date LIMIT 8";
 
         connect = DatabaseConnection.connectDB();
         XYChart.Series chart = new XYChart.Series<>();
-
         try {
             prepare = connect.prepareStatement(selectData);
             result = prepare.executeQuery();
@@ -494,7 +540,7 @@ public class AdminDashboardController implements Initializable {
                 chart.getData().add(new XYChart.Data<>(result.getString(1), result.getInt(2)));
             }
 
-            dashboad_chart_DD.getData().add(chart);
+            dashboard_chart_DD.getData().add(chart);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -532,6 +578,8 @@ public class AdminDashboardController implements Initializable {
 
     private ObservableList<Doctor> doctorListData;
 
+
+
     public void doctorDisplayData() {
         doctorListData = doctorGetData();
 
@@ -547,6 +595,153 @@ public class AdminDashboardController implements Initializable {
         doctors_tableView.setItems(doctorListData);
 
     }
+
+
+
+
+    public ObservableList<Staff> staffGetData() {
+        ObservableList<Staff> list = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM staff ";
+        connect = DatabaseConnection.connectDB();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                list.add(new Staff(
+                        result.getInt("id"),
+                        result.getString("staff_id"),
+                        result.getString("password"),
+                        result.getString("full_name"),
+                        result.getString("email"),
+                        result.getString("gender"),
+                        result.getLong("mobile_number"),
+                        result.getString("role"),
+                        result.getString("address"),
+                        result.getString("image"),
+                        result.getDate("date"),
+                        result.getDate("modify_date"),
+                        result.getDate("delete_date"),
+                        result.getString("status")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+
+    public void staffActionButton() {
+        connect = DatabaseConnection.connectDB();
+        ObservableList<Staff> staffListData = staffGetData();
+
+        Callback<TableColumn<Staff, String>, TableCell<Staff, String>> cellFactory = (TableColumn<Staff, String> param) -> {
+            final TableCell<Staff, String> cell = new TableCell<Staff, String>() {
+                public void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    if (empty) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        Button editButton = new Button("Edit");
+                        Button removeButton = new Button("Delete");
+
+                        editButton.setStyle("-fx-background-color: linear-gradient(to bottom right, #188ba7, #306090);\n"
+                                + "    -fx-cursor: hand;\n"
+                                + "    -fx-text-fill: #fff;\n"
+                                + "    -fx-font-size: 14px;\n"
+                                + "    -fx-font-family: Arial;");
+
+                        removeButton.setStyle("-fx-background-color: linear-gradient(to bottom right, #188ba7, #306090);\n"
+                                + "    -fx-cursor: hand;\n"
+                                + "    -fx-text-fill: #fff;\n"
+                                + "    -fx-font-size: 14px;\n"
+                                + "    -fx-font-family: Arial;");
+
+                        editButton.setOnAction((ActionEvent event) -> {
+                            try {
+
+                                Staff sData = staff_tableView.getSelectionModel().getSelectedItem();
+                                int num = staff_tableView.getSelectionModel().getSelectedIndex();
+
+                                if ((num - 1) < -1) {
+                                    alert.errorMessage("Please select item first");
+                                    return;
+                                }
+
+                                Data.temp_staffID = sData.getStaffID();
+                                Data.temp_staffName = sData.getFullName();
+                                Data.temp_staffEmail = sData.getEmail();
+                                Data.temp_staffPassword = sData.getPassword();
+                                Data.temp_staffRole = sData.getRole();
+                                Data.temp_staffGender = sData.getGender();
+                                Data.temp_staffMobileNumber = String.valueOf(sData.getMobileNumber());
+                                Data.temp_staffAddress = sData.getAddress();
+                                Data.temp_staffStatus = sData.getStatus();
+                                Data.temp_staffImagePath = sData.getImage();
+
+                                Parent root = FXMLLoader.load(getClass().getResource("EditStaffPage.fxml"));
+                                Stage stage = new Stage();
+
+                                stage.setScene(new Scene(root));
+                                stage.show();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                        removeButton.setOnAction((ActionEvent event) -> {
+                            Staff sData = getTableView().getItems().get(getIndex());
+                            int num = getIndex();
+
+                            if ((num - 1) < -1) {
+                                alert.errorMessage("Please select item first");
+                                return;
+                            }
+
+                            String deleteData = "UPDATE staff SET delete_date = ? , status = 'Inactive' WHERE staff_id = '"
+                                    + sData.getStaffID() + "'";
+
+                            try {
+                                if (alert.confirmationMessage("Are you sure you want to delete Staff ID: " + sData.getStaffID() + "?")) {
+                                    prepare = connect.prepareStatement(deleteData);
+                                    Date date = new Date();
+                                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+                                    prepare.setString(1, String.valueOf(sqlDate));
+                                    prepare.executeUpdate();
+
+                                    staffGetData();
+                                    alert.successMessage("Deleted Successfully!");
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+
+                        HBox manageBtn = new HBox(editButton, removeButton);
+                        manageBtn.setAlignment(Pos.CENTER);
+                        manageBtn.setSpacing(5);
+                        setGraphic(manageBtn);
+                        setText(null);
+                    }
+                }
+            };
+            return cell;
+        };
+
+        staff_col_action.setCellFactory(cellFactory);
+        staff_tableView.setItems(staffListData);
+    }
+
+
 
     public void doctorActionButton() {
 
@@ -599,8 +794,7 @@ public class AdminDashboardController implements Initializable {
                                 Data.temp_doctorStatus = pData.getStatus();
                                 Data.temp_doctorImagePath = pData.getImage();
 
-                                // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
-                                Parent root = FXMLLoader.load(getClass().getResource("EditDoctorForm.fxml"));
+                                Parent root = FXMLLoader.load(getClass().getResource("EditDoctor.fxml"));
                                 Stage stage = new Stage();
 
                                 stage.setScene(new Scene(root));
@@ -620,7 +814,7 @@ public class AdminDashboardController implements Initializable {
                                 return;
                             }
 
-                            String deleteData = "UPDATE doctor SET delete_date = ? WHERE doctor_id = '"
+                            String deleteData = "UPDATE doctor SET delete_date = ? , status='Inactive' WHERE doctor_id = '"
                                     + pData.getDoctorID() + "'";
 
                             try {
@@ -759,7 +953,7 @@ public class AdminDashboardController implements Initializable {
                                 Data.temp_status = pData.getStatus();
 
                                 // NOW LETS CREATE FXML FOR EDIT PATIENT FORM
-                                Parent root = FXMLLoader.load(getClass().getResource("EditPatientForm.fxml"));
+                                Parent root = FXMLLoader.load(getClass().getResource("EditPatient.fxml"));
                                 Stage stage = new Stage();
 
                                 stage.setScene(new Scene(root));
@@ -835,7 +1029,7 @@ public class AdminDashboardController implements Initializable {
                         result.getString("name"), result.getString("gender"), result.getLong("mobile_number"),
                         result.getString("description"), result.getString("diagnosis"),
                         result.getString("treatment"), result.getString("address"),
-                        result.getString("doctor"), result.getString("specialization" ),
+                        result.getString("doctor"), result.getString("specialization"),
                         result.getDate("date"), result.getDate("date_modify"),
                         result.getDate("date_delete"), result.getString("status"),
                         result.getDate("schedule"));
@@ -918,7 +1112,6 @@ public class AdminDashboardController implements Initializable {
                                 Data.temp_appSpecialization = aData.getSpecialization();
                                 Data.temp_appStatus = aData.getStatus();
 
-                                // NOW LETS CREATE FXML FOR EDIT APPOINTMENT FORM
                                 Parent root = FXMLLoader.load(getClass().getResource("EditAppointmentForm.fxml"));
                                 Stage stage = new Stage();
 
@@ -939,7 +1132,7 @@ public class AdminDashboardController implements Initializable {
                                 return;
                             }
 
-                            String deleteData = "UPDATE appointment SET date_delete = ? WHERE appointment_id = '"
+                            String deleteData = "UPDATE appointment SET date_delete = ? AND status ='Inactive' WHERE appointment_id = '"
                                     + aData.getAppointmentID() + "'";
 
                             try {
@@ -989,8 +1182,7 @@ public class AdminDashboardController implements Initializable {
             result = prepare.executeQuery();
 
             Patient pData;
-            while (result.next())
-            {
+            while (result.next()) {
 
                 pData = new Patient(result.getInt("id"),
                         result.getInt("patient_id"), result.getString("full_name"),
@@ -1103,7 +1295,7 @@ public class AdminDashboardController implements Initializable {
                     path = path.replace("\\", "\\\\");
                     Path transfer = Paths.get(path);
 
-                    Path copy = Paths.get("C:\\Users\\WINDOWS 10\\Documents\\NetBeansProjects\\HospitalManagementSystem\\src\\Admin_Directory\\"
+                    Path copy = Paths.get("C:\\Users\\user\\IdeaProjects\\OOP Project\\Admin Pictures\\"
                             + Data.admin_id + ".jpg");
 
                     Files.copy(transfer, copy, StandardCopyOption.REPLACE_EXISTING);
@@ -1149,6 +1341,21 @@ public class AdminDashboardController implements Initializable {
             e.printStackTrace();
         }
 
+    }
+
+    public void staffDisplayData() {
+        staffListData = staffGetData();
+
+        staff_col_staffID.setCellValueFactory(new PropertyValueFactory<>("staffID"));
+        staff_col_name.setCellValueFactory(new PropertyValueFactory<>("fullName"));
+        staff_col_gender.setCellValueFactory(new PropertyValueFactory<>("gender"));
+        staff_col_contactNumber.setCellValueFactory(new PropertyValueFactory<>("mobileNumber"));
+        staff_col_email.setCellValueFactory(new PropertyValueFactory<>("email"));
+        staff_col_role.setCellValueFactory(new PropertyValueFactory<>("role"));
+        staff_col_address.setCellValueFactory(new PropertyValueFactory<>("address"));
+        staff_col_status.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        staff_tableView.setItems(staffListData);
     }
 
     public void profileInsertImage() {
@@ -1206,14 +1413,16 @@ public class AdminDashboardController implements Initializable {
 
     // MAKE SURE THAT THE ID OF EVERY COMPONENTS TO THE OTHER IS DIFFERENT
     public void switchForm(ActionEvent event) {
-
         if (event.getSource() == dashboard_btn) {
+            System.out.println("Switching to Dashboard Form");
             dashboard_form.setVisible(true);
             doctors_form.setVisible(false);
             patients_form.setVisible(false);
             appointments_form.setVisible(false);
             payment_form.setVisible(false);
             profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             dashboardAD();
             dashboardTP();
@@ -1223,12 +1432,15 @@ public class AdminDashboardController implements Initializable {
 
             current_form.setText("Dashboard Form");
         } else if (event.getSource() == doctors_btn) {
+            System.out.println("Switching to Doctor's Form");
             dashboard_form.setVisible(false);
             doctors_form.setVisible(true);
             patients_form.setVisible(false);
             appointments_form.setVisible(false);
             payment_form.setVisible(false);
             profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             // TO DISPLAY IMMEDIATELY THE DATA OF DOCTORS IN TABLEVIEW
             doctorDisplayData();
@@ -1236,47 +1448,96 @@ public class AdminDashboardController implements Initializable {
 
             current_form.setText("Doctor's Form");
         } else if (event.getSource() == patients_btn) {
+            System.out.println("Switching to Patient's Form");
             dashboard_form.setVisible(false);
             doctors_form.setVisible(false);
             patients_form.setVisible(true);
             appointments_form.setVisible(false);
             payment_form.setVisible(false);
             profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             // TO DISPLAY IMMEDIATELY THE DATA OF PATIENTS IN TABLEVIEW
             patientDisplayData();
             patientActionButton();
+
             current_form.setText("Patient's Form");
-        } else if (event.getSource() == appointments_btn) {
+        } else if (event.getSource() == staff_btn)
+        {
+            System.out.println("Switching to Staff Form");
+            dashboard_form.setVisible(false);
+            doctors_form.setVisible(false);
+            patients_form.setVisible(false);
+            appointments_form.setVisible(false);
+            payment_form.setVisible(false);
+            profile_form.setVisible(false);
+            staff_form.setVisible(true);
+            duties_form.setVisible(false);
+
+
+            current_form.setText("Staff's Form");
+        }
+        else if(event.getSource()== duties_btn)
+        {
+            System.out.println("Switching to Duties Form");
+            dashboard_form.setVisible(false);
+            doctors_form.setVisible(false);
+            patients_form.setVisible(false);
+            appointments_form.setVisible(false);
+            payment_form.setVisible(false);
+            profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(true);
+
+            staffDisplayData();
+            staffActionButton();
+
+            current_form.setText("Duties Form");
+        }
+        else if (event.getSource() == appointments_btn)
+        {
+            System.out.println("Switching to Appointment's Form");
             dashboard_form.setVisible(false);
             doctors_form.setVisible(false);
             patients_form.setVisible(false);
             appointments_form.setVisible(true);
             payment_form.setVisible(false);
             profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             // TO DISPLAY IMMEDIATELY THE DATA OF APPOINTMENTS IN TABLEVIEW
             appointmentDisplayData();
+            appointmentActionButton();
 
             current_form.setText("Appointment's Form");
-        } else if (event.getSource() == payment_btn) {
+        } else if (event.getSource() == payment_btn)
+        {
+            System.out.println("Switching to Payment Form");
             dashboard_form.setVisible(false);
             doctors_form.setVisible(false);
             patients_form.setVisible(false);
             appointments_form.setVisible(false);
             payment_form.setVisible(true);
             profile_form.setVisible(false);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             paymentDisplayData();
 
             current_form.setText("Payment Form");
-        } else if (event.getSource() == profile_btn) {
+        } else if (event.getSource() == profile_btn)
+        {
+            System.out.println("Switching to Profile Form");
             dashboard_form.setVisible(false);
             doctors_form.setVisible(false);
             patients_form.setVisible(false);
             appointments_form.setVisible(false);
             payment_form.setVisible(false);
             profile_form.setVisible(true);
+            staff_form.setVisible(false);
+            duties_form.setVisible(false);
 
             profileStatusList();
             profileDisplayInfo();
@@ -1284,8 +1545,8 @@ public class AdminDashboardController implements Initializable {
 
             current_form.setText("Profile Form");
         }
-
     }
+
 
     public void displayAdminIDUsername() {
 
@@ -1332,7 +1593,8 @@ public class AdminDashboardController implements Initializable {
 
     public void runTime() {
 
-        new Thread() {
+        new Thread()
+        {
 
             public void run() {
                 SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -1379,6 +1641,12 @@ public class AdminDashboardController implements Initializable {
         // TO DISPLAY IMMEDIATELY THE DATA OF APPOINTMENTS IN TABLEVIEW
         appointmentDisplayData();
         appointmentActionButton();
+
+
+        //For Staff
+
+        staffDisplayData();
+        staffActionButton();
 
         // TO DISPLAY IMMEDIATELY THE DATA OF PAYMENT IN TABLEVIEW
         paymentDisplayData();
