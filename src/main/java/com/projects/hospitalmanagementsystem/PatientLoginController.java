@@ -84,7 +84,7 @@ public class PatientLoginController implements Initializable {
                     }
                 }
 
-                // CHECK IF THE STATUS OF THE DOCTOR IS CONFIRM
+                // CHECK IF THE STATUS OF THE Patient IS CONFIRM
                 String checkStatus = "SELECT status FROM patient WHERE patient_id = '"
                         + login_patientID.getText() + "' AND password = '"
                         + login_password.getText() + "' AND status = 'Confirm'";
@@ -92,18 +92,8 @@ public class PatientLoginController implements Initializable {
                 prepare = connect.prepareStatement(checkStatus);
                 result = prepare.executeQuery();
 
-                if (!result.next()) {
-
-                    if (!login_showPassword.isVisible()) {
-                        if (!login_showPassword.getText().equals(login_password.getText())) {
-                            login_showPassword.setText(login_password.getText());
-                        }
-                    } else {
-                        if (!login_showPassword.getText().equals(login_password.getText())) {
-                            login_password.setText(login_showPassword.getText());
-                        }
-                    }
-
+                if (result.next())
+                {
                     alert.errorMessage("Need the confimation of the Admin!");
                 } else {
                     prepare = connect.prepareStatement(sql);
@@ -163,8 +153,7 @@ public class PatientLoginController implements Initializable {
         login_user.setItems(listData);
     }
 
-    @FXML
-    void switchPage(ActionEvent event) {
+    public void switchPage() {
 
         if (login_user.getSelectionModel().getSelectedItem() == "Admin Portal") {
 
@@ -186,7 +175,6 @@ public class PatientLoginController implements Initializable {
             }
 
         } else if (login_user.getSelectionModel().getSelectedItem() == "Doctor Portal") {
-
             try {
 
                 Parent root = FXMLLoader.load(getClass().getResource("DoctorLoginPage.fxml"));
@@ -223,6 +211,27 @@ public class PatientLoginController implements Initializable {
                 e.printStackTrace();
             }
 
+        }
+        else if (login_user.getSelectionModel().getSelectedItem()=="Staff Portal")
+        {
+            try
+            {
+                Parent root=FXMLLoader.load(getClass().getResource("StaffLoginPage.fxml"));
+                Stage stage=new Stage();
+
+                stage.setTitle("Hospital Management System");
+
+                stage.setMinHeight(580);
+                stage.setMinWidth(340);
+
+                stage.setScene(new Scene(root));
+                stage.show();
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         login_user.getScene().getWindow().hide();
