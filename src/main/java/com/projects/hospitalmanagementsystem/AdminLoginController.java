@@ -317,6 +317,27 @@ public class AdminLoginController implements Initializable {
             }
 
         }
+        else if (login_user.getSelectionModel().getSelectedItem()=="Staff Portal")
+        {
+            try
+            {
+                Parent root=FXMLLoader.load(getClass().getResource("StaffLoginPage.fxml"));
+                Stage stage=new Stage();
+
+                stage.setTitle("Hospital Management System");
+
+                stage.setMinHeight(580);
+                stage.setMinWidth(340);
+
+                stage.setScene(new Scene(root));
+                stage.show();
+
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
 
         login_user.getScene().getWindow().hide();
 
